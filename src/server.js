@@ -1,11 +1,14 @@
 const ServerConfig=require('./config/server.config')
-const express=require('express')
+const cors=require('cors')
 
+const express=require('express')
 const app=express();
 
 const PORT= ServerConfig.PORT || 3000
 
 app.use(express.json())
+app.use(cors())
+
 const router=require('./routes/index')
 const connectToDatabase=require('./config/db.config')
 

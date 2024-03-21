@@ -1,0 +1,16 @@
+article.save((err,document)=>{
+    if(err){
+        throw err;
+    }
+})
+
+connection.once(()=>{
+
+}).catch((err)=>{
+
+})
+
+Article.updateOne({_id : },{condition})
+
+esm->es6 syntax, now inbuilt in node
+joi->validation library
