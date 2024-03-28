@@ -15,8 +15,8 @@ async function AddUser(user) {
 async function GetUserById(id) {
     try {
         // const user = await User.findById(id);
-        console.log('Id Here ',id);
-        const user = await User.findOne({id});
+        // console.log('Id Here ',id);
+        const user = await User.findById(id);
         console.log(user);
         if (!user) {
             console.error("User Not Found In DB With Id : ", id);
@@ -28,13 +28,40 @@ async function GetUserById(id) {
         throw error;
     }
 }
-
-async function UpdatePassword(id, newPassword) {
+async function GetUserByEmail(email) {
     try {
-        const user = await User.findOne({id});
+        const user = await User.findOne({email});
+        console.log('In Repo',user);
+        if (!user) {
+            console.error("User Not Found In DB With Id : ", email);
+        }
+        return user;
+
+    } catch (error) {
+        console.error("Internal Server Error:", error);
+        throw error;
+    }
+}
+
+async function GetUserByUsername(username) {
+    try {
+        const user = await User.findOne({username});
+        console.log('In Repo',user);
+        if (!user) {
+            console.error("User Not Found In DB With Username : ", username);
+        }
+        return user;
+    } catch (error) {
+        console.error("Internal Server Error:", error);
+        throw error;
+    }
+}
+async function UpdatePassword(username, newPassword) {
+    try {
+        const user = await User.findOne({username});
 
         if (!user) {
-            console.error("User Not Found In DB With Id : ", id);
+            console.error("User Not Found In DB With Username : ", username);
             return user;
         }
         // Update the password
@@ -49,13 +76,13 @@ async function UpdatePassword(id, newPassword) {
     }
 }
 
-async function UpdateProfilePicture(id, newProfilePictureURL) {
+async function UpdateProfilePicture(username, newProfilePictureURL) {
     try {
-        // Find the user by ID
-        const user = await User.findOne({id});
+        // Find the user by username
+        const user = await User.findOne({username});
 
         if (!user) {
-            console.error("User Not Found In DB With Id : ", id);
+            console.error("User Not Found In DB With Username : ", username);
             return user;
         }
 
@@ -87,4 +114,6 @@ async function GetAllUsers() {
     }
 }
 
-module.exports = { AddUser, GetUserById , UpdatePassword, UpdateProfilePicture, GetAllUsers};
+
+
+module.exports = { AddUser, GetUserById , UpdatePassword, UpdateProfilePicture, GetAllUsers, GetUserByEmail, GetUserByUsername};

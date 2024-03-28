@@ -3,15 +3,14 @@ const UserService=require('../services/user.service')
 const AuthService=require('../services/auth.service')
 async function LoginUser(req, res){
     // First Time Login
-    const id = req.body.id;
-
+    const username = req.body.username;
     const password = req.body.password;
 
     const encryptedPassword = await PasswordEncryptorUtil.EncryptPassword(password);
 
     try {
         // Get User Of id
-        const user = await UserService.GetUserById(id);
+        const user = await UserService.GetUserByUsername(username);
         
         if (!user) {
             return res.status(404).json({ success: false, message: 'User Not Found.' });
@@ -30,4 +29,23 @@ async function LoginUser(req, res){
     }
 }
 
-module.exports={ LoginUser }
+
+async function RegisterUser(req , res){
+    
+    const jsonData = JSON.parse(req.body.jsonData);
+    // if(req.files['imageFile'])
+    const imageFile = (req.files['imageFile']!=undefined?req.files['imageFile'][0]:null);
+
+    console.log('JSON Data:', jsonData);
+    console.log('Image File:', imageFile);
+
+    // Except Profile Picture, All Fields Should be There:
+    try{
+        const user=await AuthService.RegisterUser(jsonData, imageFile)
+        res.status(200).json({ "message": 'User Registered Successfully', "user": user });
+    }catch(err){
+        res.status(422).json({'error' : err.message})
+    }
+}
+
+module.exports={ LoginUser, RegisterUser }

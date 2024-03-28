@@ -1,9 +1,21 @@
 const BlogRepository=require('../repositories/blog.repository')
 const CategoryService=require('../services/category.service')
+
+async function GetAllBlogs(){
+    try{
+        const blogs=await BlogRepository.GetAllBlogs();
+        return blogs;
+    }catch(error){
+        console.error("Internal Server Error:", error);
+        throw error;
+    }
+
+}
 async function AddBlog(blog){
     try {
         const savedBlog=await BlogRepository.AddBlog(blog)
         console.log('SAVED BLOG ',savedBlog);
+        
         await Promise.all(blog.categories.map(async (category_id) => {
             const category = await CategoryService.GetCategoryById(category_id);
             console.log('Fetched Category');
@@ -54,4 +66,4 @@ async function UpdateBlog(blog){
     
 }
 
-module.exports={AddBlog , GetBlogById , UpdateBlog}
+module.exports={AddBlog , GetBlogById , UpdateBlog, GetAllBlogs}

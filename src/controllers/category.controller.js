@@ -10,5 +10,13 @@ async function AddCategory(request, response){
       }
 }
 
-
-module.exports={AddCategory}
+async function GetCategoryById(request,response){
+  try {
+    const category = await CategoryService.GetCategoryById(request.params.id);
+    response.status(200).json(category);
+  } catch (error) {
+    console.error("Error Fetching Category In Controller", error);
+    response.status(500).json({ message: "Internal Server Error" });
+  }
+}
+module.exports={AddCategory, GetCategoryById}

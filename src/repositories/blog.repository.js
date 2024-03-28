@@ -1,5 +1,20 @@
 const Blog = require("../models/blog.model");
 
+async function GetAllBlogs(){
+    try {
+        const blogs = await Blog.find({});
+        
+        if (!blogs || blogs.length === 0) {
+            console.error("No users found in the database");
+        }
+
+        return blogs;
+    } catch (error) {
+        console.error("Internal Server Error:", error);
+        throw error;
+    }
+}
+
 async function AddBlog(blog){
     try {
         const newBlog = new Blog(blog);
@@ -27,4 +42,4 @@ async function GetBlogById(id) {
         throw error;
     }
 }
-module.exports={AddBlog , GetBlogById}
+module.exports={AddBlog , GetBlogById, GetAllBlogs}

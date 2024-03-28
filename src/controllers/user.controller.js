@@ -1,5 +1,7 @@
 const UserService = require("../services/user.service");
 const cloudinary = require('../config/cloudinary.config');
+
+
 async function AddUser(request, response) {
   try {
     await UserService.AddUser(request.body);
@@ -30,7 +32,26 @@ async function GetUserById(request, response) {
     response.status(500).json({ message: "Internal Server Error" });
   }
 }
+async function GetUserByUsername(request, response) {
+  try {
+    // Your code to fetch user by ID
+    const username = request.params.username;
+    const user = await UserService.GetUserByUsername(username);
 
+    // If user not found
+    if (!user) {
+      console.error("User Not Found With Username:", request.params.username);
+      response.status(404).json({ message: "User Not Found" });
+      return;
+    }
+
+    // If user found, return user data
+    response.status(200).json(user);
+  } catch (error) {
+    console.error("Internal Server Error:", error);
+    response.status(500).json({ message: "Internal Server Error" });
+  }
+}
 async function GetAllUsers(request, response) {
     try {
       // Your code to fetch user by ID
@@ -102,4 +123,4 @@ const UpdateProfilePicture = async (req, res) => {
   }
 };
 
-module.exports = { AddUser, GetUserById, UpdatePassword, UpdateProfilePicture , GetAllUsers};
+module.exports = { AddUser, GetUserById, UpdatePassword, UpdateProfilePicture , GetAllUsers, GetUserByUsername};

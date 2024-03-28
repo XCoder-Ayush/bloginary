@@ -1,10 +1,15 @@
 const UserRepository = require('../repositories/user.repository');
 const EncryptPasswordUtil = require('../utils/password.encrypter.util');
-
-async function AddUser(user) {
+const cloudinary=require('../config/cloudinary.config')
+async function AddUser(user,profilePicture) {
     try {
         const encryptedPassword = await EncryptPasswordUtil.EncryptPassword(user.password)
         user.password=encryptedPassword;
+        if(profilePicture){
+            const result = await cloudinary.uploader.upload(profilePicture.path);
+            user.profilePictureURL=result.secure_url
+        }
+
         await UserRepository.AddUser(user);
     } catch (error) {
         console.error("Error Saving User In Service", error);
@@ -23,6 +28,25 @@ async function GetUserById(id){
     }
 }
 
+async function GetUserByEmail(email){
+    try{
+        const user=await UserRepository.GetUserByEmail(email);
+        // console.log(user);
+        return user;
+    }catch(error){
+        console.error("Internal Server Error:", error);
+        throw error;
+    }
+}
+async function GetUserByUsername(username){
+    try{
+        const user=await UserRepository.GetUserByUsername(username);
+        return user;
+    }catch(error){
+        console.error("Internal Server Error:", error);
+        throw error;
+    }
+}
 async function GetAllUsers(){
     try{
         const users=await UserRepository.GetAllUsers();
@@ -33,9 +57,9 @@ async function GetAllUsers(){
     }
 }
 
-async function UpdatePassword(id, oldPassword, newPassword){
+async function UpdatePassword(username, oldPassword, newPassword){
     // Logged In Condition 
-    const user=await UserRepository.GetUserById(id);
+    const user=await UserRepository.GetUserByUsername(username);
     console.log(user);
     if(!user){
         // Returns Null User
@@ -64,9 +88,9 @@ async function UpdatePassword(id, oldPassword, newPassword){
 
 }
 
-async function UpdateProfilePicture(id,profilePictureUrl){
+async function UpdateProfilePicture(username,profilePictureUrl){
     // Logged In Condition 
-    const user=await UserRepository.GetUserById(id);
+    const user=await UserRepository.GetUserByUsername(username);
     console.log(user);
     if(!user){
         // Returns Null User
@@ -87,4 +111,4 @@ async function UpdateProfilePicture(id,profilePictureUrl){
 }
 
 
-module.exports = { AddUser, GetUserById, GetAllUsers, UpdatePassword , UpdateProfilePicture};
+module.exports = { AddUser, GetUserById, GetAllUsers, UpdatePassword , UpdateProfilePicture, GetUserByEmail, GetUserByUsername};

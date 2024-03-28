@@ -42,6 +42,11 @@ const blogSchema = new mongoose.Schema({
   categories:[{
     type:mongoose.Schema.Types.ObjectId,
     ref: "Category"
+  }],
+  likes:[{
+    type:String,
+    required:true,
+    default: []
   }]
 },{timestamps: true});
 

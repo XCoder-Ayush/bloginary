@@ -10,4 +10,4 @@ async function AddComment(request, response){
       }
 }
 
-module.exports={AddComment}
+module.exports={ AddComment }
