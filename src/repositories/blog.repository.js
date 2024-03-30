@@ -26,7 +26,29 @@ async function AddBlog(blog){
         throw error; // Throw the error to be caught by the caller (UserService)
     }
 }
+async function UpdateBlog(blog) {
+    try {
+        // Destructure the _id field from the blog object
+        const { _id, ...updatedFields } = blog;
 
+        // Use findByIdAndUpdate to find the existing blog by its ID and update its fields
+        const updatedBlog = await Blog.findByIdAndUpdate(
+            _id,
+            { $set: updatedFields },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedBlog) {
+            throw new Error("Blog not found"); // Throw an error if the blog with the provided ID doesn't exist
+        }
+
+        console.log("Blog Updated Successfully:", updatedBlog);
+        return updatedBlog;
+    } catch (error) {
+        console.error("Error Updating Blog In Repo", error);
+        throw error;
+    }
+}
 async function GetBlogById(id) {
     try {
         // const blog = await Blog.findOne({id});
@@ -42,4 +64,20 @@ async function GetBlogById(id) {
         throw error;
     }
 }
-module.exports={AddBlog , GetBlogById, GetAllBlogs}
+async function GetBlogByBlogId(id) {
+    try {
+        // const blog = await Blog.findOne({id});
+        const blog = await Blog.findOne({id});
+        console.log(blog);
+        if (!blog) {
+            console.error("Blog Not Found In DB With Blog Id : ", id);
+        }
+        return blog;
+
+    } catch (error) {
+        console.error("Internal Server Error:", error);
+        throw error;
+    }
+}
+
+module.exports={AddBlog , GetBlogById, GetAllBlogs, GetBlogByBlogId, UpdateBlog}

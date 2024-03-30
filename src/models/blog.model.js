@@ -22,11 +22,6 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  likeCount: {
-    type: Number,
-    required: true,
-    default:0
-  },
   imageURL:{
     type: String,
     default:null

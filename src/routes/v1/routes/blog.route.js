@@ -10,5 +10,6 @@ blogRouter.post('/',AuthMiddleware,BlogController.AddBlog)
 blogRouter.get('/:id',BlogController.GetBlogById)
 blogRouter.delete('/:id',AuthMiddleware,BlogController.DeleteBlogById)
 blogRouter.put('/:id',AuthMiddleware,BlogController.UpdateBlogById)
+blogRouter.patch('/like',AuthMiddleware,BlogController.UpdateBlogLikeCount)
 
 module.exports=blogRouter;
