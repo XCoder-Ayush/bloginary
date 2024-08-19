@@ -1,9 +1,29 @@
-version: "3.8" 
+version: "3.8"
 
 services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URL: mongodb://mongo:27017/bloginary
+      PORT: 8080
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27016:27017"
+    volumes:
+      - mongo-data:/data/db
+
   prom-server:
     image: prom/prometheus
     ports:
-      - 9090:9090
+      - "9090:9090"
     volumes:
       - ./prometheus-config.yml:/etc/prometheus/prometheus.yml
+
+volumes:
+  mongo-data:
