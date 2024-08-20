@@ -8,6 +8,12 @@ services:
     environment:
       MONGO_URL: mongodb://mongo:27017/bloginary
       PORT: 8080
+      SECRET_KEY:
+      CLOUDINARY_CLOUD_NAME:
+      CLOUDINARY_API_KEY:
+      CLOUDINARY_API_SECRET:
+      JWT_SECRET:
+
     depends_on:
       - mongo
 
