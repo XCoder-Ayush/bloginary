@@ -12,7 +12,7 @@ services:
       CLOUDINARY_CLOUD_NAME:
       CLOUDINARY_API_KEY:
       CLOUDINARY_API_SECRET:
-      JWT_SECRET:
+      ACCESS_TOKEN_SECRET:
 
     depends_on:
       - mongo
