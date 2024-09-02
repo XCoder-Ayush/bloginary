@@ -4,6 +4,8 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const client = require("prom-client");
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger.config");
 
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({
@@ -14,7 +16,7 @@ const PORT = ServerConfig.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "./public")));
-
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.set("views", path.join(__dirname, "./public/views"));
 app.set("view engine", "ejs");
 

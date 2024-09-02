@@ -15,7 +15,7 @@ async function GetAllBlogs(){
 async function AddBlog(blog){
     try {
         const savedBlog=await BlogRepository.AddBlog(blog)
-        console.log('SAVED BLOG ',savedBlog);
+        console.log('SAVED BLOG',savedBlog);
         
         await Promise.all(blog.categories.map(async (category_id) => {
             const category = await CategoryService.GetCategoryById(category_id);
