@@ -11,18 +11,13 @@ on:
       - master
 
 jobs:
-  checkout:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-  setup:
-    runs-on: ubuntu-latest
-    needs: checkout
-
-    steps:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -31,47 +26,29 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-  build:
-    runs-on: ubuntu-latest
-    needs: setup
-
-    steps:
       - name: Build Project
         run: npm run build
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
       - name: Run Unit Tests
-        run: npm run test:unit
+        run: npm test:unit
 
-  repo_scanning:
-    runs-on: ubuntu-latest
-    needs: build
+      #   - name: Run Static Code Analysis (SonarCloud)
+      #     uses: sonarsource/sonarcloud-github-action@v2
+      #     with:
+      #       projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
+      #       organization: ${{ secrets.SONAR_ORGANIZATION }}
+      #       token: ${{ secrets.SONAR_TOKEN }}
 
-    steps:
       - name: Repo Scanning (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "fs"
           format: "table"
 
-  docker_build:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
       - name: Build Docker Image
         run: |
           docker build -t xcoder420/bloginary .
 
-  image_scanning:
-    runs-on: ubuntu-latest
-    needs: docker_build
-
-    steps:
       - name: Image Scanning (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
@@ -79,11 +56,6 @@ jobs:
           image-ref: "xcoder420/bloginary"
           format: "table"
 
-  docker_push:
-    runs-on: ubuntu-latest
-    needs: [docker_build, image_scanning]
-
-    steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:

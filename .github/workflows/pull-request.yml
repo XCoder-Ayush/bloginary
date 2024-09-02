@@ -1,0 +1,56 @@
+name: CI Pipeline for PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Run Unit Tests
+        run: npm test:unit
+
+      #   - name: Run Static Code Analysis (SonarCloud)
+      #     uses: sonarsource/sonarcloud-github-action@v2
+      #     with:
+      #       projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
+      #       organization: ${{ secrets.SONAR_ORGANIZATION }}
+      #       token: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Repo Scanning (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          format: "table"
+
+      - name: Build Docker Image
+        run: |
+          docker build -t xcoder420/bloginary .
+
+      - name: Image Scanning (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "image"
+          image-ref: "xcoder420/bloginary"
+          format: "table"
