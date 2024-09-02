@@ -30,7 +30,7 @@ jobs:
         run: npm run build
 
       - name: Run Unit Tests
-        run: npm test:unit
+        run: npm run test:unit
 
       #   - name: Run Static Code Analysis (SonarCloud)
       #     uses: sonarsource/sonarcloud-github-action@v2
