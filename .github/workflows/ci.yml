@@ -40,7 +40,7 @@ jobs:
       #       token: ${{ secrets.SONAR_TOKEN }}
 
       - name: Repo Scanning (Trivy)
-        uses: aquasecurity/trivy-action@v0.11.0
+        uses: aquasecurity/trivy-action@v0.24.0
         with:
           scan-type: "fs"
           format: "table"
